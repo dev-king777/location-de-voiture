@@ -133,7 +133,6 @@ $resolveVehicleImage = static function (array $vehicle, int $index) use ($realCa
                 </div>
                 <div class="quick-actions">
                     <a href="booking.php" class="btn action-btn"><i class="fas fa-plus me-2"></i>New Booking</a>
-                    <a href="invoice.php" class="btn action-btn ghost"><i class="fas fa-receipt me-2"></i>Invoices</a>
                     <a href="invoices.php" class="btn action-btn ghost"><i class="fas fa-receipt me-2"></i>Invoices</a>
                 </div>
             </header>
