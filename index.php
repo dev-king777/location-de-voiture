@@ -49,6 +49,33 @@ $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $vehicles = $stmt->fetchAll();
 $upcomingCount = count($upcomingReturns);
+$realCarImages = [
+    'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1400&q=80',
+];
+$showcaseCards = [
+    ['title' => 'Executive Sedan', 'subtitle' => 'Premium comfort', 'image' => $realCarImages[0]],
+    ['title' => 'Urban Compact', 'subtitle' => 'Agile city drive', 'image' => $realCarImages[1]],
+    ['title' => 'Grand Tourer', 'subtitle' => 'Long-range luxury', 'image' => $realCarImages[2]],
+    ['title' => 'Performance SUV', 'subtitle' => 'Power and control', 'image' => $realCarImages[3]],
+    ['title' => 'Business Elite', 'subtitle' => 'Corporate class', 'image' => $realCarImages[4]],
+    ['title' => 'Adventure Line', 'subtitle' => 'Ready for roads', 'image' => $realCarImages[5]],
+    ['title' => 'Classic Premium', 'subtitle' => 'Iconic design', 'image' => $realCarImages[6]],
+    ['title' => 'Future Electric', 'subtitle' => 'Eco performance', 'image' => $realCarImages[7]],
+];
+$resolveVehicleImage = static function (array $vehicle, int $index) use ($realCarImages): string {
+    $candidate = trim((string) ($vehicle['image_url'] ?? ''));
+    if ($candidate !== '' && stripos($candidate, 'placehold.co') === false) {
+        return $candidate;
+    }
+    return $realCarImages[$index % count($realCarImages)];
+};
 
 ?>
 <!DOCTYPE html>
@@ -181,6 +208,25 @@ $upcomingCount = count($upcomingReturns);
             </article>
         </section>
 
+        <section class="glass-card section-card reveal" style="--delay: 0.19s;">
+            <div class="section-head">
+                <h3><i class="fas fa-camera-retro"></i> Real Car Showcase</h3>
+                <p>Creative animated cards powered by real vehicle photography.</p>
+            </div>
+            <div class="showcase-grid">
+                <?php foreach ($showcaseCards as $showcaseIndex => $card): ?>
+                    <?php $showcaseDelay = number_format(0.04 * (($showcaseIndex % 10) + 1), 2, '.', ''); ?>
+                    <article class="showcase-card reveal" style="--delay: <?= $showcaseDelay ?>s;">
+                        <img src="<?= htmlspecialchars($card['image']) ?>" alt="<?= htmlspecialchars($card['title']) ?>">
+                        <div class="showcase-overlay">
+                            <span><?= htmlspecialchars($card['subtitle']) ?></span>
+                            <h4><?= htmlspecialchars($card['title']) ?></h4>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
         <section class="glass-card section-card reveal" style="--delay: 0.2s;">
             <div class="section-head">
                 <h3><i class="fas fa-clock-rotate-left"></i> Upcoming Returns</h3>
@@ -247,10 +293,11 @@ $upcomingCount = count($upcomingReturns);
                             $statusClass = strtolower($v['status']);
                             $registration = $v['registration_number'] ?? ($v['matricule'] ?? 'N/A');
                             $delay = number_format(0.03 * (($index % 8) + 1), 2, '.', '');
+                            $vehicleImage = $resolveVehicleImage($v, $index);
                         ?>
                         <article class="vehicle-card reveal" style="--delay: <?= $delay ?>s;">
                             <div class="vehicle-media">
-                                <img src="<?= htmlspecialchars($v['image_url'] ?: 'https://placehold.co/600x400/png?text=Car') ?>" alt="<?= htmlspecialchars($v['brand'] . ' ' . $v['model']) ?>">
+                                <img src="<?= htmlspecialchars($vehicleImage) ?>" alt="<?= htmlspecialchars($v['brand'] . ' ' . $v['model']) ?>">
                                 <?php if ($needsMaintenance): ?>
                                     <span class="maintenance-flag"><i class="fas fa-triangle-exclamation"></i> Service Check</span>
                                 <?php endif; ?>
@@ -285,7 +332,6 @@ $upcomingCount = count($upcomingReturns);
                     <p>No vehicles found for this filter.</p>
                 </div>
             <?php endif; ?>
-        </div>
         </section>
     </main>
 </div>
