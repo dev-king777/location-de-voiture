@@ -10,6 +10,12 @@ if (!isset($_SESSION['user_id'])) {
 
 $message = '';
 $error = '';
+$client_error = '';
+$client_message = '';
+$new_client_name = '';
+$new_client_phone = '';
+$new_client_license = '';
+$new_client_address = '';
 
 function isValidDate($date) {
     $dt = DateTime::createFromFormat('Y-m-d', $date);
@@ -31,6 +37,38 @@ function isAvailable($pdo, $vehicle_id, $start_date, $end_date) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? 'booking';
+
+    if ($action === 'add_client') {
+        $new_client_name = trim($_POST['full_name'] ?? '');
+        $new_client_phone = trim($_POST['phone'] ?? '');
+        $new_client_license = trim($_POST['license_number'] ?? '');
+        $new_client_address = trim($_POST['address'] ?? '');
+
+        if ($new_client_name === '' || $new_client_phone === '' || $new_client_license === '') {
+            $client_error = "Please fill in full name, phone, and license number.";
+        } else {
+            try {
+                $stmt = $pdo->prepare("
+                    INSERT INTO clients (full_name, phone, license_number, address)
+                    VALUES (?, ?, ?, ?)
+                ");
+                $stmt->execute([$new_client_name, $new_client_phone, $new_client_license, $new_client_address]);
+                $client_id = (int) $pdo->lastInsertId();
+                $client_message = "Client added successfully.";
+                $new_client_name = '';
+                $new_client_phone = '';
+                $new_client_license = '';
+                $new_client_address = '';
+            } catch (PDOException $e) {
+                if ($e->getCode() === '23000') {
+                    $client_error = "License number already exists.";
+                } else {
+                    $client_error = "Failed to add client.";
+                }
+            }
+        }
+    } else {
     $client_id = isset($_POST['client_id']) ? (int)$_POST['client_id'] : 0;
     $vehicle_id = isset($_POST['vehicle_id']) ? (int)$_POST['vehicle_id'] : 0;
     $start_date = trim($_POST['start_date'] ?? '');
@@ -95,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+    }
     }
 }
 
@@ -167,8 +206,12 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
             <?php if ($error): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
+            <?php if ($client_message): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($client_message) ?></div>
+            <?php endif; ?>
 
             <form method="POST">
+                <input type="hidden" name="action" value="booking">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Client</label>
@@ -180,7 +223,7 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <small><a href="#" class="text-decoration-none text-primary">+ Add New Client</a></small>
+                        <small><a href="#" class="text-decoration-none text-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">+ Add New Client</a></small>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -222,6 +265,46 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
     </main>
 </div>
 
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php if ($client_error): ?>
+                    <div class="alert alert-danger"><?= htmlspecialchars($client_error) ?></div>
+                <?php endif; ?>
+                <form method="POST">
+                    <input type="hidden" name="action" value="add_client">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" class="form-control" required value="<?= htmlspecialchars($new_client_name) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" required value="<?= htmlspecialchars($new_client_phone) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">License Number</label>
+                        <input type="text" name="license_number" class="form-control" required value="<?= htmlspecialchars($new_client_license) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="3"><?= htmlspecialchars($new_client_address) ?></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn action-btn ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn action-btn"><i class="fas fa-user-plus me-2"></i>Add Client</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     (function () {
         const revealElements = document.querySelectorAll('.reveal');
@@ -242,5 +325,11 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
         revealElements.forEach((el) => observer.observe(el));
     })();
 </script>
+<?php if ($client_error): ?>
+<script>
+    const addClientModal = new bootstrap.Modal(document.getElementById('addClientModal'));
+    addClientModal.show();
+</script>
+<?php endif; ?>
 </body>
 </html>
