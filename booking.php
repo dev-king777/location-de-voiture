@@ -171,7 +171,7 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
         <nav class="main-nav">
             <a href="index.php"><i class="fas fa-gauge-high"></i> Dashboard</a>
             <a href="booking.php" class="active"><i class="fas fa-calendar-plus"></i> New Booking</a>
-            <a href="invoice_gen.php"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+            <a href="invoices.php"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
             <a href="logout.php"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a>
         </nav>
 

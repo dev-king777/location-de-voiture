@@ -110,7 +110,7 @@ $resolveVehicleImage = static function (array $vehicle, int $index) use ($realCa
             <nav class="main-nav">
                 <a href="index.php" class="active"><i class="fas fa-gauge-high"></i> Dashboard</a>
                 <a href="booking.php"><i class="fas fa-calendar-plus"></i> New Booking</a>
-                <a href="invoice.php"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
+                <a href="invoices.php"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
                 <a href="logout.php"><i class="fas fa-arrow-right-from-bracket"></i> Logout</a>
             </nav>
 
@@ -134,6 +134,7 @@ $resolveVehicleImage = static function (array $vehicle, int $index) use ($realCa
                 <div class="quick-actions">
                     <a href="booking.php" class="btn action-btn"><i class="fas fa-plus me-2"></i>New Booking</a>
                     <a href="invoice.php" class="btn action-btn ghost"><i class="fas fa-receipt me-2"></i>Invoices</a>
+                    <a href="invoices.php" class="btn action-btn ghost"><i class="fas fa-receipt me-2"></i>Invoices</a>
                 </div>
             </header>
 
