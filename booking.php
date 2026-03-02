@@ -99,7 +99,7 @@ $preselected_vehicle = $_GET['vehicle_id'] ?? '';
                                 <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['full_name']) ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <small><a href="#" class="text-decoration-none">+ Add New Client</a></small>
+                        <small><a href="add_client.php" class="text-decoration-none">+ Add New Client</a></small>
                     </div>
 
                     <div class="col-md-6 mb-3">
