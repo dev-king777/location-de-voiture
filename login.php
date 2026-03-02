@@ -33,59 +33,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SpeedyRental</title>
+    <title>Login - Location De Vouture Draga4Life</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify_content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            padding: 2rem;
-            width: 100%;
-            max-width: 400px;
-        }
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #1e3c72;
-        }
-        .btn-primary {
-            background: #1e3c72;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            font-weight: bold;
-        }
-        .btn-primary:hover {
-            background: #2a5298;
-        }
-    </style>
+    <link rel="stylesheet" href="login.css">
 </head>
-<body>
-    <div class="login-card">
-        <h2 class="login-header">SpeedyRental</h2>
-        <?php if($error): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-        <?php endif; ?>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+<body class="login-page">
+    <div class="ambient-glow glow-1" aria-hidden="true"></div>
+    <div class="ambient-glow glow-2" aria-hidden="true"></div>
+
+    <main class="page-shell">
+        <section class="brand-panel">
+            <p class="eyebrow">Fleet intelligence platform</p>
+            <h1>
+                <span class="title-line">Location De Vouture</span>
+                <span class="title-line brand-animated">Draga4Life</span>
+            </h1>
+            <p class="brand-copy">
+                Manage reservations, monitor returns, and keep every vehicle mission-ready from one professional dashboard.
+            </p>
+            <div class="feature-list">
+                <span>Live fleet status</span>
+                <span>Billing automation</span>
+                <span>Maintenance alerts</span>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="mini-kpis">
+                <article>
+                    <strong>24/7</strong>
+                    <small>Operation visibility</small>
+                </article>
+                <article>
+                    <strong>Fast</strong>
+                    <small>Booking workflow</small>
+                </article>
             </div>
-            <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
-    </div>
+        </section>
+
+        <section class="auth-panel">
+            <div class="auth-card">
+                <h2>Sign in</h2>
+                <p class="helper">Use your manager credentials to continue.</p>
+
+                <?php if ($error): ?>
+                    <div class="alert alert-danger mb-4"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+
+                <form method="POST" class="auth-form">
+                    <div class="field-wrap">
+                        <label for="username" class="form-label">Username</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            value="<?= htmlspecialchars($username ?? '') ?>"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-wrap">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-login">Access Dashboard</button>
+                </form>
+
+                <p class="legal-note">Protected access for authorized staff only.</p>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
