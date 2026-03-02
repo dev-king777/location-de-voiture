@@ -1,6 +1,6 @@
 <?php
-// invoice_gen.php
 session_start();
+ob_start(); // Bouclier magique contre les espaces invisibles
 require 'config/db.php';
 
 // 1. Vérification de la sécurité et de l'URL
@@ -9,7 +9,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 if (!isset($_SESSION['user_id'])) {
-    die("Accès refusé : Veuillez vous connecter.");
+    die("Accès refusé : Veuillez vous connecter depuis le Dashboard.");
 }
 
 $reservation_id = $_GET['id'];
@@ -103,6 +103,8 @@ $total = $subtotal + $vat_amount;
                 background: white;
                 margin: 0;
                 padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .invoice-container {
@@ -211,3 +213,4 @@ $total = $subtotal + $vat_amount;
 </body>
 
 </html>
+<?php ob_end_flush(); ?>

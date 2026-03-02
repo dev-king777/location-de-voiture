@@ -322,7 +322,8 @@ $resolveVehicleImage = static function (array $vehicle, int $index) use ($realCa
                                         <span class="reg-chip"><?= htmlspecialchars($registration) ?></span>
                                     </div>
                                     <p class="vehicle-meta"><?= htmlspecialchars($v['category']) ?> |
-                                        <?= number_format($v['mileage']) ?> km</p>
+                                        <?= number_format($v['mileage']) ?> km
+                                    </p>
                                     <div class="vehicle-bottom">
                                         <div class="rate-block">
                                             <small>Daily rate</small>
